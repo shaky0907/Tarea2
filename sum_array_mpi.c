@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#define MESSAGE_SIZE 2
+
 // size of array
 
 
@@ -13,7 +15,7 @@ int main(int argc, char* argv[])
 {
     
 	int pid, np,
-		elements_per_process,
+		MESSAGE_SIZE,
 		n_elements_recieved;
 	// np -> no. of processes
 	// pid -> process id
@@ -41,9 +43,28 @@ int main(int argc, char* argv[])
         for (int i = 0; i < n; ++i) {
             a[i] = i+1;
         }
+
+		int b[n];
+		int j;
+
+		//inicializar array
+		for (int i = 0; i < np; i += 1) {
+            b[i] = 0;
+        }
+
+		while (j < n){
+			for (int i = 0; i < np; i += 1) {
+				b[i] += MESSAGE_SIZE;
+				j += MESSAGE_SIZE;
+				if (j >= n){
+					break;
+				}
+			}
+        }
+		}
        
 		int index, i;
-		elements_per_process = n / np;
+		//MESSAGE_SIZE = n / np;
 
 		// check if more than 1 processes are run
 		if (np > 1) {
@@ -51,19 +72,19 @@ int main(int argc, char* argv[])
 			// to child processes to calculate
 			// their partial sums
 			for (i = 1; i < np - 1; i++) {
-				index = i * elements_per_process;
-
-				MPI_Send(&elements_per_process,
+				index = i * MESSAGE_SIZE;
+				int message_size = MESSAGE_SIZE
+				MPI_Send(&message_size,
 						1, MPI_INT, i, 0,
 						MPI_COMM_WORLD);
 				MPI_Send(&a[index],
-						elements_per_process,
+						MESSAGE_SIZE,
 						MPI_INT, i, 0,
 						MPI_COMM_WORLD);
 			}
 
 			// last process adds remaining elements
-			index = i * elements_per_process;
+			index = i * MESSAGE_SIZE;
 			int elements_left = n - index;
 
 			MPI_Send(&elements_left,
@@ -78,7 +99,7 @@ int main(int argc, char* argv[])
 
 		// master process add its own sub array
 		int sum = 0;
-		for (i = 0; i < elements_per_process; i++)
+		for (i = 0; i < MESSAGE_SIZE; i++)
 			sum += a[i];
 
         printf("sum calculated by root process: %d\n", sum);
