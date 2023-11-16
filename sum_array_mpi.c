@@ -41,7 +41,8 @@ void start(int argc, char* argv[]){
 	// pid -> process id
 	int message_size;
 
-	int n = 100;
+	//size of array
+	int n = 1000;
 
 	MPI_Status status;
 
@@ -90,11 +91,8 @@ void start(int argc, char* argv[]){
 			}
         }
 		
-		for(int i = 0; i<np;i++){
-			printf(" %d ",b[i]);
-		}
 		
-		
+	
 		int index, i;
 		
 		
@@ -117,11 +115,6 @@ void start(int argc, char* argv[]){
 			}
 
 			// last process adds remaining elements
-			printf("Index %d\n",index);
-			printf("i: %d\n",i);
-			printf("b[i]: %d\n",b[i]);
-
-
 			int elements_left = n - index;
 			
 			MPI_Send(&b[i],
