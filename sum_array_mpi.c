@@ -42,7 +42,7 @@ void start(int argc, char* argv[]){
 	int message_size;
 
 	//size of array
-	int n = 1000;
+	int n = 100;
 
 	MPI_Status status;
 

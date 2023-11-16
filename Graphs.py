@@ -28,5 +28,6 @@ plt.xlabel('Message Size')
 plt.ylabel('Execution Time')
 plt.title('Execution Time vs. Message Size')
 
+plt.xticks(range(1, 21))
 # Show the plot
 plt.show()
